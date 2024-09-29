@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       const cards = await db.collection('RegisterCard').find({ 구역번호: zoneNumber }).toArray();
       return res.status(200).json(cards);
     } catch (error) {
-      return res.status(500).json({ message: '서버 오류', error });
+      return res.status(500).json({ message: '서버 오류s', error });
     }
   }
 
