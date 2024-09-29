@@ -21,7 +21,7 @@ export default async function List() {
   return (
     <div>
       <ClientNavbar />
-      <a href="/newCard">구역카드 추가하기123 + </a>
+      <a href="/newCard">구역카드 추가하기123ses + </a>
       
       <div className="list-bg">
         {uniqueCards.map((a, i) => (
