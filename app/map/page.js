@@ -80,20 +80,27 @@ const KakaoMap = () => {
       }
     };
 
-    const script = document.createElement('script');
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=services`;
-    script.async = true;
-    document.head.appendChild(script);
+    const existingScript = document.querySelector(`script[src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=services"]`);
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=services`;
+      script.async = true;
+      document.head.appendChild(script);
 
-    script.onload = () => {
+      script.onload = () => {
+        window.kakao.maps.load(() => {
+          createMap();
+        });
+      };
+
+      return () => {
+        document.head.removeChild(script);
+      };
+    } else {
       window.kakao.maps.load(() => {
         createMap();
       });
-    };
-
-    return () => {
-      document.head.removeChild(script);
-    };
+    }
   }, []);
 
   const searchAddrFromCoords = (coords, callback) => {
