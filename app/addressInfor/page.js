@@ -9,6 +9,7 @@ const AddressInfor = () => {
   const router = useRouter();
   const [addressData, setAddressData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusData, setStatusData] = useState({}); // 각 세부정보의 상태를 저장하는 객체
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -31,6 +32,35 @@ const AddressInfor = () => {
     fetchAddress();
   }, [jibun]);
 
+  const handleStatusChange = (index, status) => {
+    setStatusData((prev) => ({
+      ...prev,
+      [index]: status, // 해당 index에 대한 상태 저장
+    }));
+  };
+
+  const completeZone = async () => {
+    const completionDate = new Date().toISOString(); // 현재 날짜를 ISO 형식으로 저장
+
+    try {
+      const response = await fetch('/api/completeZone', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jibun, completionDate }), // 지번과 날짜를 전송
+      });
+
+      if (response.ok) {
+        alert('구역이 완료되었습니다.');
+      } else {
+        alert('구역 완료 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Error completing zone:', error);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -50,10 +80,28 @@ const AddressInfor = () => {
         <h2>세부 정보:</h2>
         <ul>
           {addressData.map((item, index) => (
-            <li key={index}>{item.세부정보}</li> // 각 세부정보 출력
+            <li key={index}>
+              {item.세부정보} {/* 세부정보 출력 */}
+              {/* 상태 변경을 위한 드롭다운 */}
+              <select
+                value={statusData[index] || ''}
+                onChange={(e) => handleStatusChange(index, e.target.value)}
+              >
+                <option value="">상태 선택</option>
+                <option value="방문">방문</option>
+                <option value="만나지 못함">만나지 못함</option>
+                <option value="방문금지">방문금지</option>
+                <option value="나의 재방">나의 재방</option>
+              </select>
+              {/* 선택한 상태 표시 */}
+              <p>선택한 상태: {statusData[index]}</p>
+            </li>
           ))}
         </ul>
       </div>
+
+      {/* 구역 완료 버튼 추가 */}
+      <button onClick={completeZone}>구역 완료</button>
 
       <button onClick={() => router.back()}>이전</button>
     </div>
