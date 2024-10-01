@@ -33,9 +33,43 @@ export default function Register() {
     }
   };
 
+  // styles 객체 추가
+  const styles = {
+    input: {
+      padding: '10px',
+      margin: '10px 0',
+      width: '100%',
+      borderRadius: '4px',
+      border: '1px solid #ccc',
+    },
+    button: {
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      padding: '10px 20px',
+      margin: '10px 0',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      width: '100%',
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      maxWidth: '400px',
+      margin: '0 auto',
+    },
+    select: {
+      padding: '10px',
+      margin: '10px 0',
+      width: '100%',
+      borderRadius: '4px',
+      border: '1px solid #ccc',
+    }
+  };
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={styles.form}>
         <input 
           name="name" 
           type="text" 
@@ -43,6 +77,7 @@ export default function Register() {
           value={name} 
           onChange={(e) => setName(e.target.value)} 
           required 
+          style={styles.input}
         />
         <input 
           name="id" 
@@ -51,6 +86,7 @@ export default function Register() {
           value={id} 
           onChange={(e) => setId(e.target.value)} 
           required 
+          style={styles.input}
         />
         <input 
           name="password" 
@@ -59,6 +95,7 @@ export default function Register() {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
           required 
+          style={styles.input}
         />
 
         {/* 역할 선택 드롭다운 */}
@@ -67,6 +104,7 @@ export default function Register() {
           value={role} 
           onChange={(e) => setRole(e.target.value)} 
           required
+          style={styles.select}
         >
           <option value="" disabled>역할 선택</option>
           <option value="0">전도인</option>
@@ -75,7 +113,7 @@ export default function Register() {
           <option value="moderator">모더레이터</option>
         </select>
 
-        <button type="submit">id/pw 가입 요청</button>
+        <button type="submit" style={styles.button}>id/pw 가입 요청</button>
       </form>
     </div>
   );

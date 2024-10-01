@@ -9,11 +9,20 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signIn("credentials", {
+    
+    const res = await signIn("credentials", {
       id: credentials.id,
       password: credentials.password,
       callbackUrl: "/", // 로그인 성공 시 이동할 페이지
+      redirect: false,  // 자동 리다이렉트를 방지합니다.
     });
+
+    // res.ok가 false일 경우 로그인 실패로 간주하고 alert 창을 띄웁니다.
+    if (res?.error) {
+      alert('로그인에 실패했습니다. 아이디나 비밀번호를 확인해주세요.');
+    } else {
+      window.location.href = res.url;  // 성공 시 해당 페이지로 이동
+    }
   };
 
   return (
@@ -34,7 +43,12 @@ export default function SignIn() {
           value={credentials.password}
           onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
         />
-        <button type="submit" style={styles.button}>로그인</button>
+        <button type="submit" style={styles.button}>로그인</button> 
+       
+        <div style={{ marginTop: '10px' }}>
+          <a href="/register" style={{ marginRight: '20px' }}>회원가입</a> 
+          <a href="/">비밀번호 찾기</a>
+        </div>
       </form>
     </div>
   );
