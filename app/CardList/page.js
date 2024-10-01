@@ -7,7 +7,6 @@ export default async function List() {
   const db = client.db("NextCardZone");
   let cards = await db.collection('RegisterCard').find().toArray();
 
-  // 구역번호가 같은 경우 중복 제거
   const uniqueCards = [];
   const seenZoneNumbers = new Set();
 
@@ -17,6 +16,15 @@ export default async function List() {
       uniqueCards.push(card);
     }
   });
+
+  // 구역 완료 날짜를 가져오기 위해 추가적인 데이터베이스 조회 필요
+  const completionDates = {}; // 구역 완료 날짜를 저장할 객체
+  for (const card of uniqueCards) {
+    const completion = await db.collection('CompletionDates').findOne({ 구역번호: card.구역번호 });
+    if (completion) {
+      completionDates[card.구역번호] = completion.completionDate;
+    }
+  }
 
   return (
     <div>
@@ -28,6 +36,10 @@ export default async function List() {
           <div className="list-item" key={i}>
             <Link href={'/CardDetail/' + a.구역번호}>
               <h4>{a.구역번호}</h4>
+              {/* 구역 완료 날짜 표시 */}
+              {completionDates[a.구역번호] && (
+                <p>구역 완료 날짜: {new Date(completionDates[a.구역번호]).toLocaleDateString()}</p>
+              )}
             </Link>
           </div>
         ))}
