@@ -8,11 +8,12 @@ export default function Detail(props) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [completionDates, setCompletionDates] = useState({});
+
   const [editCardId, setEditCardId] = useState(null);
   const [editCardDetails, setEditCardDetails] = useState({ 지번: "", 세부정보: "" });
 
-  const zoneNumber = parseInt(props.params.id, 10); // URL 파라미터에서 구역번호를 가져옴
+  const zoneNumber = parseInt(props.params.id, 10);
 
   useEffect(() => {
     async function fetchZoneData() {
@@ -33,6 +34,32 @@ export default function Detail(props) {
     fetchZoneData();
   }, [zoneNumber]);
 
+  useEffect(() => {
+    async function fetchCompletionDates() {
+      const jibunList = cards.map(card => ({ jibun: card.지번 }));
+      const response = await fetch('/api/completedZones', { // 새로운 API 엔드포인트
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jibunList }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const completionDateMap = {};
+        data.forEach(zone => {
+          completionDateMap[zone.jibun] = zone.completionDate;
+        });
+        setCompletionDates(completionDateMap);
+      }
+    }
+
+    if (cards.length > 0) {
+      fetchCompletionDates();
+    }
+  }, [cards]);
+
   const handleEditClick = (card) => {
     setEditCardId(card._id);
     setEditCardDetails({ 지번: card.지번, 세부정보: card.세부정보 });
@@ -44,7 +71,6 @@ export default function Detail(props) {
   };
 
   const handleUpdateCard = async () => {
-    // 수정할 내용이 없는 경우 API 호출 방지
     if (editCardDetails.지번 === "" && editCardDetails.세부정보 === "") {
       alert("수정할 내용을 입력해 주세요.");
       return;
@@ -64,7 +90,6 @@ export default function Detail(props) {
         return;
       }
 
-      // 카드 목록 새로 고침
       const updatedCards = cards.map(card => (card._id === editCardId ? { ...card, ...editCardDetails } : card));
       setCards(updatedCards);
       setEditCardId(null);
@@ -82,10 +107,11 @@ export default function Detail(props) {
     return <p>{error}</p>;
   }
 
-  // 지번에 따라 카드 그룹화
   const groupedCards = cards.reduce((acc, card) => {
-    acc[card.지번] = acc[card.지번] || [];
-    acc[card.지번].push(card);
+    if (card.지번) {
+      acc[card.지번] = acc[card.지번] || [];
+      acc[card.지번].push(card);
+    }
     return acc;
   }, {});
 
@@ -98,17 +124,20 @@ export default function Detail(props) {
           <h4>지번 및 세부정보 목록:</h4>
           {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
             <Card
-              bg="light"  // 배경 색상을 'Light'로 변경
+              bg="light"
               key={jibun}
-              text="dark" // 텍스트 색상을 어둡게 설정
-              className="mb-2" // 카드 사이에 마진 추가
-              style={{ display: 'inline-block', marginBottom: '1rem' }} // 자동 너비 설정
+              text="dark"
+              className="mb-2"
+              style={{ display: 'inline-block', marginBottom: '1rem' }}
             >
               <Card.Header>지번: {jibun}</Card.Header>
               <Card.Body>
                 {cardGroup.map((card) => (
                   <div key={card._id}>
                     <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
+                    <Card.Text>
+                      완료 날짜: {completionDates[jibun] ? completionDates[jibun] : '정보 없음'}
+                    </Card.Text>
                     {editCardId === card._id ? (
                       <>
                         <input 
