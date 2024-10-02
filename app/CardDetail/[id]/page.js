@@ -8,8 +8,6 @@ export default function Detail(props) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [completionDates, setCompletionDates] = useState({});
-
   const [editCardId, setEditCardId] = useState(null);
   const [editCardDetails, setEditCardDetails] = useState({ 지번: "", 세부정보: "" });
 
@@ -33,32 +31,6 @@ export default function Detail(props) {
 
     fetchZoneData();
   }, [zoneNumber]);
-
-  useEffect(() => {
-    async function fetchCompletionDates() {
-      const jibunList = cards.map(card => ({ jibun: card.지번 }));
-      const response = await fetch('/api/completedZones', { // 새로운 API 엔드포인트
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jibunList }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const completionDateMap = {};
-        data.forEach(zone => {
-          completionDateMap[zone.jibun] = zone.completionDate;
-        });
-        setCompletionDates(completionDateMap);
-      }
-    }
-
-    if (cards.length > 0) {
-      fetchCompletionDates();
-    }
-  }, [cards]);
 
   const handleEditClick = (card) => {
     setEditCardId(card._id);
@@ -135,9 +107,6 @@ export default function Detail(props) {
                 {cardGroup.map((card) => (
                   <div key={card._id}>
                     <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
-                    <Card.Text>
-                      완료 날짜: {completionDates[jibun] ? completionDates[jibun] : '정보 없음'}
-                    </Card.Text>
                     {editCardId === card._id ? (
                       <>
                         <input 
