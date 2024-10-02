@@ -42,29 +42,35 @@ const AddressInfor = () => {
 
   const completeZone = async () => {
     const completionDate = new Date().toISOString(); 
-
-    try {
-      const response = await fetch('/api/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jibun, completionDate }),
-      });
-
-      if (response.ok) {
-        // 구역 번호를 가져와서 완료 날짜를 상태에 저장
-        const zoneNumber = addressData[0].구역번호; 
-        setCompletionDates((prev) => ({
-          ...prev,
-          [zoneNumber]: completionDate, // 구역 번호를 키로 사용하여 날짜 저장
-        }));
-        alert('구역이 완료되었습니다.');
-      } else {
-        alert('구역 완료 저장에 실패했습니다.');
+  
+    if (addressData.length > 0) {
+      const zoneNumber = addressData[0].구역번호; // 구역번호 가져오기
+  
+      try {
+        const response = await fetch('/api/complete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ jibun, completionDate, zoneNumber }), // 지번과 구역번호를 body에 포함
+        });
+  
+        if (response.ok) {
+          // 구역 번호를 가져와서 완료 날짜를 상태에 저장
+          setCompletionDates((prev) => ({
+            ...prev,
+            [zoneNumber]: completionDate, // 구역 번호를 키로 사용하여 날짜 저장
+          }));
+          alert('구역 완료!');
+          router.push('/map');
+        } else {
+          alert('구역 완료 저장에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('Error completing zone:', error);
       }
-    } catch (error) {
-      console.error('Error completing zone:', error);
+    } else {
+      alert('구역 정보가 없습니다.');
     }
   };
 

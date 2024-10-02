@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
+import Card from 'react-bootstrap/Card';
 
 export default function Detail(props) {
   const [cards, setCards] = useState([]);
@@ -81,43 +82,52 @@ export default function Detail(props) {
     return <p>{error}</p>;
   }
 
+  // 지번에 따라 카드 그룹화
+  const groupedCards = cards.reduce((acc, card) => {
+    acc[card.지번] = acc[card.지번] || [];
+    acc[card.지번].push(card);
+    return acc;
+  }, {});
+
   return (
     <div>
       <ClientNavbar />
-  
-
-      {cards.length > 0 ? (
+      {Object.entries(groupedCards).length > 0 ? (
         <>
           <h4>구역번호: {zoneNumber}</h4>
           <h4>지번 및 세부정보 목록:</h4>
-          {cards.map((card) => (
-            <div key={card._id}>
-              {editCardId === card._id ? (
-                <>
-                  <input 
-                    type="text" 
-                    name="지번" 
-                    value={editCardDetails.지번} 
-                    onChange={handleInputChange} 
-                    placeholder="지번" 
-                  />
-                  <input 
-                    type="text" 
-                    name="세부정보" 
-                    value={editCardDetails.세부정보} 
-                    onChange={handleInputChange} 
-                    placeholder="세부정보" 
-                  />
-                  <button onClick={handleUpdateCard}>수정 완료</button>
-                </>
-              ) : (
-                <>
-                  <h5>지번: {card.지번}</h5>
-                  <p>세부정보: {card.세부정보 || '정보 없음'}</p>
-                  <button onClick={() => handleEditClick(card)}>수정</button>
-                </>
-              )}
-            </div>
+          {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
+            <Card
+              bg="light"  // 배경 색상을 'Light'로 변경
+              key={jibun}
+              text="dark" // 텍스트 색상을 어둡게 설정
+              className="mb-2" // 카드 사이에 마진 추가
+              style={{ display: 'inline-block', marginBottom: '1rem' }} // 자동 너비 설정
+            >
+              <Card.Header>지번: {jibun}</Card.Header>
+              <Card.Body>
+                {cardGroup.map((card) => (
+                  <div key={card._id}>
+                    <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
+                    {editCardId === card._id ? (
+                      <>
+                        <input 
+                          type="text" 
+                          name="세부정보" 
+                          value={editCardDetails.세부정보} 
+                          onChange={handleInputChange} 
+                          placeholder="세부정보" 
+                          className="form-control mb-2"
+                        />
+                        <button onClick={handleUpdateCard} className="btn btn-success">수정 완료</button>
+                      </>
+                    ) : (
+                      <button onClick={() => handleEditClick(card)} className="btn btn-warning">수정</button>
+                    )}
+                  </div>
+                ))}
+              </Card.Body>
+            </Card>
           ))}
         </>
       ) : (
