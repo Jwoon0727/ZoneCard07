@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
 import Card from 'react-bootstrap/Card';
 import Spinner from 'react-bootstrap/Spinner';
+import Loading from "@/app/loading";
 
 export default function Detail(props) {
   const [cards, setCards] = useState([]);
@@ -73,14 +74,7 @@ export default function Detail(props) {
   };
 
   if (loading) {
-    return (
-      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <p>데이터를 불러오는 중...</p>
-      </div>
-    );
+      return <Loading />; 
   }
 
   if (error) {

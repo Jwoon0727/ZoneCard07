@@ -1,33 +1,22 @@
-'use client'
+// components/Loading.js
+'use client';
 import React from 'react';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function Loading() {
   const styles = {
     container: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh', // 화면의 전체 높이를 차지하도록 설정
-    },
-    spinner: {
-      border: '16px solid #f3f3f3', // 스피너의 바깥쪽 링
-      borderRadius: '50%',
-      borderTop: '16px solid #3498db', // 회전하는 부분의 색상
-      width: '120px',
-      height: '120px',
-      animation: 'spin 2s linear infinite', // 회전 애니메이션
+      textAlign: 'center',
+      marginTop: '2rem',
     },
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.spinner}></div>
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+      <p>데이터를 불러오는 중...</p>
     </div>
   );
 }
