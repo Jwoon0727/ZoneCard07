@@ -28,48 +28,63 @@ export default function Register() {
         alert(result.message); // 에러 메시지 표시
       }
     } catch (error) {
-      alert('회원가입완료되었습니다.');
+      alert('회원가입 완료되었습니다.');
       window.location.href = '/api/auth/signin?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2F';
     }
   };
 
-  // styles 객체 추가
   const styles = {
-    input: {
-      padding: '10px',
-      margin: '10px 0',
-      width: '100%',
-      borderRadius: '4px',
-      border: '1px solid #ccc',
-    },
-    button: {
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      padding: '10px 20px',
-      margin: '10px 0',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      width: '100%',
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f0f0f0',
     },
     form: {
-      display: 'flex',
-      flexDirection: 'column',
-      maxWidth: '400px',
-      margin: '0 auto',
+      backgroundColor: '#fff',
+      padding: '2rem',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+      width: '300px',
+    },
+    title: {
+      fontSize: '24px',
+      marginBottom: '1rem',
+      textAlign: 'center',
+    },
+    input: {
+      width: '100%',
+      padding: '0.8rem',
+      marginBottom: '1rem',
+      borderRadius: '4px',
+      border: '1px solid #ddd',
+      fontSize: '16px',
+    },
+    button: {
+      width: '100%',
+      padding: '0.8rem',
+      backgroundColor: '#4CAF50',
+      color: '#fff',
+      borderRadius: '4px',
+      border: 'none',
+      fontSize: '16px',
+      cursor: 'pointer',
     },
     select: {
-      padding: '10px',
+      padding: '0.8rem',
       margin: '10px 0',
       width: '100%',
       borderRadius: '4px',
-      border: '1px solid #ccc',
+      border: '1px solid #ddd',
+      fontSize: '16px',
     }
   };
 
   return (
-    <div>
+    <div style={styles.container}>
       <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 style={styles.title}>회원가입</h2>
         <input 
           name="name" 
           type="text" 
@@ -113,7 +128,7 @@ export default function Register() {
           <option value="moderator">모더레이터</option>
         </select>
 
-        <button type="submit" style={styles.button}>id/pw 가입 요청</button>
+        <button type="submit" style={styles.button}>가입 요청</button>
       </form>
     </div>
   );

@@ -83,7 +83,7 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button onClick={handleForgotPassword} style={styles.button}>비밀번호 재설정 링크 보내기</button>
+            <button onClick={handleForgotPassword} style={styles.button}>비밀번호 재설정 링크보내기</button><br></br>
             <button onClick={() => setShowForgotPassword(false)} style={styles.button}>취소</button>
           </div>
         )}
