@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
 import Card from 'react-bootstrap/Card';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function Detail(props) {
   const [cards, setCards] = useState([]);
@@ -72,11 +73,24 @@ export default function Detail(props) {
   };
 
   if (loading) {
-    return <p>데이터를 불러오는 중...</p>;
+    return (
+      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p>데이터를 불러오는 중...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      </div>
+    );
   }
 
   const groupedCards = cards.reduce((acc, card) => {
