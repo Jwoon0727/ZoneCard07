@@ -100,41 +100,75 @@ export default function Detail(props) {
       <ClientNavbar />
       {Object.entries(groupedCards).length > 0 ? (
         <>
-          <h4>구역번호: {zoneNumber}</h4>
-          <h4>지번 및 세부정보 목록:</h4>
-          {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
-            <Card
-              bg="light"
-              key={jibun}
-              text="dark"
-              className="mb-2"
-              style={{ display: 'inline-block', marginBottom: '1rem' }}
-            >
-              <Card.Header>지번: {jibun}</Card.Header>
-              <Card.Body>
-                {cardGroup.map((card) => (
-                  <div key={card._id}>
-                    <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
-                    {editCardId === card._id ? (
-                      <>
-                        <input 
-                          type="text" 
-                          name="세부정보" 
-                          value={editCardDetails.세부정보} 
-                          onChange={handleInputChange} 
-                          placeholder="세부정보" 
-                          className="form-control mb-2"
-                        />
-                        <button onClick={handleUpdateCard} className="btn btn-success">수정 완료</button>
-                      </>
-                    ) : (
-                      <button onClick={() => handleEditClick(card)} className="btn btn-warning">수정</button>
-                    )}
-                  </div>
-                ))}
-              </Card.Body>
-            </Card>
-          ))}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: '1rem',
+            padding: '10px',
+            backgroundColor: '#4481bd',
+            borderRadius: '8px',
+            width: '100%',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h2 style={{
+              color: 'white',
+              fontWeight: 'bold',
+              margin: 0,
+              fontSize: '24px',
+            }}>
+              구역번호: {zoneNumber}
+            </h2>
+          </div>
+
+          <h4> 목록 ➡️</h4>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+            {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
+              <Card
+                bg="light"
+                key={jibun}
+                text="dark"
+                className="mb-2"
+                style={{ width: '250px', marginLeft:"10px" ,height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+              >
+                <Card.Header>지번: {jibun}</Card.Header>
+                <Card.Body>
+                  {cardGroup.map((card) => (
+                    <div key={card._id}>
+                      <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
+                      {editCardId === card._id ? (
+                        <>
+                          <input 
+                            type="text" 
+                            name="세부정보" 
+                            value={editCardDetails.세부정보} 
+                            onChange={handleInputChange} 
+                            placeholder="세부정보" 
+                            className="form-control mb-2"
+                          />
+                          <button onClick={handleUpdateCard} className="btn btn-success">수정 완료</button>
+                        </>
+                      ) : (
+                        <button 
+                          onClick={() => handleEditClick(card)} 
+                          style={{
+                            backgroundColor: 'none', 
+                            color: '#333', 
+                            border: '2px solid #ff8800', 
+                            padding: '3px 5px', 
+                            borderRadius: '8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          ✏️
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </Card.Body>
+              </Card>
+            ))}
+          </div>
         </>
       ) : (
         <p>해당 구역번호에 대한 데이터가 없습니다.</p>

@@ -43,9 +43,9 @@ export default function ClientNavbar() {
             ) : (
               <>
                 <LoginBtn />
-                <Link href="/register">
+                {/* <Link href="/register">
                   <Button variant="outline-primary" className="ms-2">회원가입</Button>
-                </Link>
+                </Link> */}
               </>
             )}
 
