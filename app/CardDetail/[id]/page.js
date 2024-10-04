@@ -109,14 +109,15 @@ export default function Detail(props) {
             backgroundColor: '#4481bd',
             borderRadius: '8px',
             width: '100%',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            position: 'static'
           }}>
             <h2 style={{
               color: 'white',
               fontWeight: 'bold',
               margin: 0,
               fontSize: '24px',
-              position: 'static'
+             
             }}>
               구역번호: {zoneNumber}
             </h2>

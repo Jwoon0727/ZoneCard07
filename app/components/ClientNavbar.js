@@ -58,6 +58,7 @@ export default function ClientNavbar() {
                 {/* <NavDropdown.Item href="/newCard">구역등록</NavDropdown.Item> */}
                 <NavDropdown.Item href="/CardList">구역리스트</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">구역배정</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">게시판 관리</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
               </NavDropdown>
