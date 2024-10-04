@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
 import Card from 'react-bootstrap/Card';
-
 import Loading from "@/app/loading";
 
 export default function Detail(props) {
