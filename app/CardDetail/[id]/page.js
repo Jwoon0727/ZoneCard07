@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
 import Card from 'react-bootstrap/Card';
-import Spinner from 'react-bootstrap/Spinner';
+
 import Loading from "@/app/loading";
 
 export default function Detail(props) {
