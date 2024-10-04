@@ -48,7 +48,7 @@ export default function ClientNavbar() {
                 </Link> */}
               </>
             )}
-
+            <Nav.Link href="/noticeboard">회중게시판</Nav.Link>
             <Nav.Link href="/map">지도</Nav.Link>
             <Nav.Link href="/userlist">구역</Nav.Link>
 
