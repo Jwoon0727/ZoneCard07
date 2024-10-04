@@ -74,7 +74,7 @@ export default function Detail(props) {
   };
 
   if (loading) {
-      return <Loading />; 
+    return <Loading />;
   }
 
   if (error) {
@@ -116,20 +116,34 @@ export default function Detail(props) {
               fontWeight: 'bold',
               margin: 0,
               fontSize: '24px',
+              position: 'static'
             }}>
               구역번호: {zoneNumber}
             </h2>
           </div>
 
-          <h4> 목록 ➡️</h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          <h4></h4>
+          <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '1rem', 
+            justifyContent: 'center',  // 카드들을 수평으로 가운데 정렬
+            alignItems: 'center'  // 카드들을 수직으로 가운데 정렬 (필요할 경우)
+          }}>
             {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
               <Card
                 bg="light"
                 key={jibun}
                 text="dark"
                 className="mb-2"
-                style={{ width: '250px', marginLeft:"10px" ,height: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                style={{ 
+                  width: '300px',  // 카드 너비를 300px로 설정
+                  height: '300px', 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  justifyContent: 'space-between',
+                  marginLeft: '10px'
+                }}
               >
                 <Card.Header>지번: {jibun}</Card.Header>
                 <Card.Body>
