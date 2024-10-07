@@ -14,7 +14,7 @@ export default withPWA({
     disable: false, // PWA 항상 활성화
     register: true,
     skipWaiting: true,
-    buildExcludes: [/sw.js.map$/],
+    buildExcludes: [/\.map$/],
     runtimeCaching: [
         {
             urlPattern: /^https:\/\/.*\.(?:png|jpg|jpeg|svg|gif)$/i,
