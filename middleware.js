@@ -11,7 +11,7 @@ export async function middleware(request) {
     console.log('User Role:', token.user.role); // 사용자의 역할 로그
   }
 
-  if (!token && (pathname === '/userlist' || pathname === '/map' || pathname === '/profile')) {
+  if (!token && (pathname === '/userlist' || pathname === '/map' || pathname === '/profile' || pathname === '/noticeboard')) {
     return NextResponse.redirect(new URL('/api/auth/signin?callbackUrl=' + encodeURIComponent(request.url), request.url));
   }
 
