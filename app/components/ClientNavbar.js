@@ -60,7 +60,7 @@ export default function ClientNavbar() {
                 <NavDropdown.Item href="#action/3.3">구역배정</NavDropdown.Item>
                 <NavDropdown.Item href="/noticeboardRegister">게시판 관리</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">aws테스트123</NavDropdown.Item>
+                <NavDropdown.Item href="/imgUpload">aws테스트123</NavDropdown.Item>
               </NavDropdown>
             )}
           </Nav>
