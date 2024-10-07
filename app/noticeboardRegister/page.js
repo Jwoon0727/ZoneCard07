@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import ClientNavbar from '../components/ClientNavbar';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import ImgUpload from '../imgUpload/page'; // 새로운 ImgUpload 컴포넌트 불러오기
 
 function BoardManage() {
+  const { data: session, status } = useSession(); // 로그인 세션 가져오기
   const [tabs, setTabs] = useState([]);
   const [key, setKey] = useState('tab-0');
   const [newTabTitle, setNewTabTitle] = useState('');
@@ -13,20 +15,26 @@ function BoardManage() {
   const [showForm, setShowForm] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   useEffect(() => {
     const fetchTabs = async () => {
       try {
+        setLoading(true); // 데이터 로딩 시작
         const response = await fetch('/api/manageBoard');
         const data = await response.json();
         setTabs(data);
       } catch (error) {
         console.error('Failed to fetch tabs', error);
+      } finally {
+        setLoading(false); // 데이터 로딩 완료
       }
     };
 
-    fetchTabs();
-  }, []);
+    if (status === 'authenticated') {
+      fetchTabs();
+    }
+  }, [status]);
 
   const handleAddTab = async () => {
     if (!newTabTitle || !newTabContent) {
@@ -95,6 +103,16 @@ function BoardManage() {
       setAlertType('');
     }, 3000);
   };
+
+  // 로딩 중일 때 로딩 메시지 표시
+  if (status === 'loading' || loading) {
+    return <div>로딩 중...</div>;
+  }
+
+  // 인증되지 않은 경우 처리
+  if (status === 'unauthenticated') {
+    return <div>로그인하지 않았습니다. 로그인 후 이용해주세요.</div>;
+  }
 
   return (
     <div>

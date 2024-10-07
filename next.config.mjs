@@ -34,7 +34,7 @@ export default withPWA({
                 cacheName: 'api-cache',
                 expiration: {
                     maxEntries: 50,
-                    maxAgeSeconds:  30 * 24 * 60 * 60 * 1000,  // 1일
+                    maxAgeSeconds: 30 * 24 * 60 * 60,  // 1일
                 },
             },
         },
