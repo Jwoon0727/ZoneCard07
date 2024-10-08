@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import ClientNavbar from '../components/ClientNavbar';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import Loading from "@/app/loading";
 
 function BoardManage() {
   const { data: session, status } = useSession();
@@ -163,7 +164,7 @@ function BoardManage() {
 
   // 로딩 중일 때 로딩 메시지 표시
   if (status === 'loading' || loading) {
-    return <div>로딩 중...</div>;
+    return <Loading/>
   }
 
   // 인증되지 않은 경우 처리
@@ -177,19 +178,28 @@ function BoardManage() {
       <h2>게시판 관리</h2>
 
       <button
-        onClick={() => setShowForm(true)}
-        style={{
-          marginBottom: '1rem',
-          padding: '10px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        +
-      </button>
+  onClick={() => setShowForm(true)}
+  style={{
+    marginBottom: '1rem',
+    padding: '10px',
+    backgroundColor: '#fff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    display: 'flex', // 버튼 안에 아이콘과 텍스트를 나란히 배치
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  {/* 이미지 삽입 */}
+  <img
+    src="/images/plus.png" // 여기에 원하는 이미지 경로를 입력하세요
+    alt="icon"
+    style={{ width: '45px', height: '45px', marginRight: '5px' }} // 이미지 크기 및 여백 설정
+  />
+ 
+</button>
 
       {alertMessage && (
         <div
