@@ -188,7 +188,7 @@ function BoardManage() {
           cursor: 'pointer',
         }}
       >
-        탭 추가 +
+        +
       </button>
 
       {alertMessage && (

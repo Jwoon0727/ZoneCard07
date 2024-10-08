@@ -30,7 +30,7 @@ export default async function List() {
   return (
     <div>
       <ClientNavbar />
-      <a href="/newCard">새로운구역 추가하기 + </a>
+      <Link href={'/newCard'}><img src="/images/plus.png" style={{ width: '45px', height: '45px', marginLeft : "20px", marginBottom : "30px", marginTop : "20px"}}/></Link>
 
       <div className="list-bg">
         {uniqueCards.map((a, i) => (

@@ -24,5 +24,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/userlist', '/map', '/profile'],
+  matcher: ['/userlist', '/map', '/profile', '/noticeboard'],
 };

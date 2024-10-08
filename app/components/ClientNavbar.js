@@ -32,7 +32,7 @@ export default function ClientNavbar() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/">구역카드12</Navbar.Brand>
+        <Navbar.Brand href="/">구역카드</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -52,13 +52,20 @@ export default function ClientNavbar() {
             <Nav.Link href="/map">지도</Nav.Link>
             <Nav.Link href="/userlist">구역</Nav.Link>
 
+            <NavDropdown title="봉사" id="basic-nav-dropdown">
+            <NavDropdown.Item href="#action/3.3">전시대신청</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3">~~</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3">~~</NavDropdown.Item>
+            </NavDropdown>
+
             {status === 'authenticated' && session?.user.role !== '0' && (
               <NavDropdown title="더보기" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/userCard">유저관리</NavDropdown.Item>
-                {/* <NavDropdown.Item href="/newCard">구역등록</NavDropdown.Item> */}
-                <NavDropdown.Item href="/CardList">구역리스트</NavDropdown.Item>
+                <NavDropdown.Item href="/userCard">유저관리 <img src="/images/user.png" style={{ width: '25px', height: '25px', marginLeft : "25px" }}/></NavDropdown.Item>
+                <NavDropdown.Item href="/noticeboardRegister">게시판 관리 <img src="/images/noticeboard.png" style={{ width: '25px', height: '25px', marginLeft : "20px" }}/></NavDropdown.Item>
+                <NavDropdown.Item href="/CardList">구역리스트 <img src="/images/list.png" style={{ width: '25px', height: '25px', marginLeft : "20px" }}/></NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">구역배정</NavDropdown.Item>
-                <NavDropdown.Item href="/noticeboardRegister">게시판 관리</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">구역배정</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">구역배정</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item href="#action/3.3">111</NavDropdown.Item>
               </NavDropdown>

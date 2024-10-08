@@ -11,7 +11,7 @@ export default async function List() {
     <div>
         <ClientNavbar/>
     <div className="list-bg">
-    <Link href={'/userAdd'}>유저추가+</Link> 
+    <Link href={'/userAdd'}><img src="/images/userPlus.png" style={{ width: '45px', height: '45px', marginLeft : "20px", marginBottom : "30px", marginTop : "20px"}}/></Link>
       {user.map((a, i) => (
         <div className="list-item" key={i}>
           <Link href={'/userInformation/' + a._id}>
