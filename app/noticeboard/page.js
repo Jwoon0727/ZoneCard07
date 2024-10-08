@@ -28,7 +28,7 @@ function JustifiedExample() {
   }, []);
 
   if (loading) {
-    return <Loading/>; // 로딩 중일 때 보여줄 화면
+    return <Loading />; // 로딩 중일 때 보여줄 화면
   }
 
   return (
@@ -58,10 +58,10 @@ function JustifiedExample() {
                 <p>{tab.content}</p>
 
                 {/* 업로드된 파일이 있으면 이미지로 표시 */}
-                {tab.filePath && (
+                {tab.imageUrl && (
                   <div style={{ marginTop: '10px' }}>
                     <img
-                      src={tab.filePath} // 이미지 경로
+                      src={tab.imageUrl} // 이미지 경로
                       alt="Uploaded file"
                       style={{ maxWidth: '100%', height: 'auto' }} // 이미지 스타일
                     />

@@ -1,4 +1,10 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { connectDB } from '@/util/database';
+
+
+const client = await connectDB;
+const db = client.db('NextCardZone');
+const img = await db.collection('noticeBoard')
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
