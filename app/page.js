@@ -10,7 +10,7 @@ export default function Home() {
       {/* Kakao 지도 */}
       {/* <KakaoMap /> */}
 
-    <h1>MainPage</h1>
+    <h1>MainPage123</h1>
    
     </div>
   );
