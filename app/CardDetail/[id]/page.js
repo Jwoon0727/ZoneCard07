@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ClientNavbar from "@/app/components/ClientNavbar";
 import Card from 'react-bootstrap/Card';
 import Loading from "@/app/loading";
+import KakaoMap from "@/app/components/KakaoMap";
 
 export default function Detail(props) {
   const [cards, setCards] = useState([]);
@@ -121,7 +122,7 @@ export default function Detail(props) {
               구역번호: {zoneNumber}
             </h2>
           </div>
-
+            <KakaoMap  enableDrawingTools = {true} enableInfoWindow = {false}/>
           <h4></h4>
           <div style={{ 
             display: 'flex', 
