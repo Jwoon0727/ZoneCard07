@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
@@ -158,6 +157,28 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
     }
   };
 
+  // 좌표 저장 함수
+  const saveCoords = async () => {
+    try {
+      const response = await fetch('/api/save-coordinates', {  // 예시 API 경로
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ coordinates: clickedCoords }),
+      });
+
+      if (response.ok) {
+        alert('좌표가 성공적으로 저장되었습니다.');
+      } else {
+        alert('좌표 저장에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('저장 중 오류 발생:', error);
+      alert('좌표 저장 중 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <div style={{ width: '100%', height: '50vh', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
       <div id="map" style={{ width: '100%', height: '100%', backgroundColor: 'lightgray' }}></div>
@@ -175,6 +196,11 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
             </li>
           ))}
         </ul>
+        {clickedCoords.length > 0 && (
+          <button onClick={saveCoords} style={{ marginTop: '10px' }}>
+            저장하기
+          </button>
+        )}
       </div>
     </div>
   );
