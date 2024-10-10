@@ -10,7 +10,8 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
   const managerRef = useRef(null);  // Drawing Manager 참조
   const toolboxRef = useRef(null);  // Toolbox 참조
   const [clickedCoords, setClickedCoords] = useState([]); // 클릭한 좌표를 저장할 state
-
+  const [polygonCreated, setPolygonCreated] = useState(false); // 폴리곤 생성 여부를 저장할 state
+ 
   useEffect(() => {
     const createMap = () => {
       if (window.kakao && window.kakao.maps) {
@@ -48,6 +49,13 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
             // Toolbox 생성
             toolboxRef.current = new window.kakao.maps.Drawing.Toolbox({ drawingManager: managerRef.current });
             mapRef.current.addControl(toolboxRef.current.getElement(), window.kakao.maps.ControlPosition.TOP);
+
+            // 폴리곤이 그려졌을 때 폴리곤 생성 여부를 true로 변경
+            window.kakao.maps.event.addListener(managerRef.current, 'drawend', (data) => {
+              if (data.overlayType === window.kakao.maps.Drawing.OverlayType.POLYGON) {
+                setPolygonCreated(true);  // 폴리곤 생성 상태로 변경
+              }
+            });
           }
 
           // 세션 스토리지에서 마커 좌표와 infoWindow 정보를 가져옴
@@ -170,6 +178,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
 
       if (response.ok) {
         alert('좌표가 성공적으로 저장되었습니다.');
+        setPolygonCreated(false);  // 저장 후 저장하기 버튼 숨기기
       } else {
         alert('좌표 저장에 실패했습니다.');
       }
@@ -186,24 +195,15 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
         <span className="title">지도중심기준 행정동 주소정보</span>
         <span id="centerAddr"></span>
       </div>
-
-      <div style={{ marginTop: '20px' }}>
-        <h3>클릭한 좌표 목록:</h3>
-        <ul>
-          {clickedCoords.map((coord, index) => (
-            <li key={index}>
-              경도: {coord.lng}, 위도: {coord.lat}
-            </li>
-          ))}
-        </ul>
-        {clickedCoords.length > 0 && (
-          <button onClick={saveCoords} style={{ marginTop: '10px' }}>
-            저장하기
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default KakaoMap;
+      {polygonCreated && (
+               <button 
+               onClick={saveCoords} 
+               style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: 2, padding: '10px', backgroundColor: '#39f', color: '#fff' }}>
+               좌표 저장하기
+             </button>
+            )}
+          </div>
+        );
+      };
+      
+      export default KakaoMap;
