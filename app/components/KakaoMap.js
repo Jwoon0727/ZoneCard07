@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {  
+const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNumber }) => {  
   const mapRef = useRef(null);  // 지도 객체 참조
   const geocoderRef = useRef(null);  // 지오코더 객체 참조
   const markerRef = useRef(null);  // 마커 객체 참조
@@ -20,7 +20,10 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
           center: new window.kakao.maps.LatLng(36.8396345, 127.1426990), // 초기 중심 좌표
           level: 3,
         };
-
+        if (zoneNumber) {
+          // zoneNumber 기반으로 지도의 다른 초기 설정 가능
+          console.log(`Received zoneNumber: ${zoneNumber}`);
+        }
         if (!mapRef.current) {
           mapRef.current = new window.kakao.maps.Map(container, options);
           geocoderRef.current = new window.kakao.maps.services.Geocoder();
@@ -168,14 +171,17 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true }) => {
   // 좌표 저장 함수
   const saveCoords = async () => {
     try {
-      const response = await fetch('/api/save-coordinates', {  // 예시 API 경로
+      const response = await fetch('/api/save-coordinates', {  // API 경로
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ coordinates: clickedCoords }),
+        body: JSON.stringify({
+          zoneNumber,  // zoneNumber를 함께 전송
+          coordinates: clickedCoords,  // 좌표 리스트 전송
+        }),
       });
-
+  
       if (response.ok) {
         alert('좌표가 성공적으로 저장되었습니다.');
         setPolygonCreated(false);  // 저장 후 저장하기 버튼 숨기기

@@ -122,14 +122,14 @@ export default function Detail(props) {
               구역번호: {zoneNumber}
             </h2>
           </div>
-            <KakaoMap  enableDrawingTools = {true} enableInfoWindow = {false}/>
+            <KakaoMap enableDrawingTools={true} enableInfoWindow={false} zoneNumber={zoneNumber} />
           <h4></h4>
           <div style={{ 
             display: 'flex', 
             flexWrap: 'wrap', 
             gap: '1rem', 
-            justifyContent: 'center',  // 카드들을 수평으로 가운데 정렬
-            alignItems: 'center'  // 카드들을 수직으로 가운데 정렬 (필요할 경우)
+            justifyContent: 'center',  
+            alignItems: 'center' 
           }}>
             {Object.entries(groupedCards).map(([jibun, cardGroup]) => (
               <Card
@@ -138,7 +138,7 @@ export default function Detail(props) {
                 text="dark"
                 className="mb-2"
                 style={{ 
-                  width: '300px',  // 카드 너비를 300px로 설정
+                  width: '300px',  
                   height: '300px', 
                   display: 'flex', 
                   flexDirection: 'column', 
