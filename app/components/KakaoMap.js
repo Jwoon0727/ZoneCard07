@@ -13,17 +13,51 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
   const [polygonCreated, setPolygonCreated] = useState(false); // 폴리곤 생성 여부를 저장할 state
  
   useEffect(() => {
-    const createMap = () => {
+    const createMap = async () => {
       if (window.kakao && window.kakao.maps) {
         const container = document.getElementById('map');
         const options = {
           center: new window.kakao.maps.LatLng(36.8396345, 127.1426990), // 초기 중심 좌표
           level: 3,
         };
-        if (zoneNumber) {
-          // zoneNumber 기반으로 지도의 다른 초기 설정 가능
-          console.log(`Received zoneNumber: ${zoneNumber}`);
-        }
+    
+
+// zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
+if (zoneNumber) {
+  try {
+    const response = await fetch(`/api/get-polygon-coordinates?zoneNumber=${zoneNumber}`);
+    const data = await response.json();
+
+    // 여러 개의 폴리곤 데이터를 가져온 경우 처리
+    if (data && data.length > 0) {
+      data.forEach(polygonData => {
+        const polygonPath = polygonData.coordinates.map(coord => 
+          new window.kakao.maps.LatLng(coord.lat, coord.lng)
+        );
+
+        // 각각의 폴리곤 그리기
+        const polygon = new window.kakao.maps.Polygon({
+          path: polygonPath,
+          strokeWeight: 3,
+          strokeColor: '#39f',
+          strokeOpacity: 0.8,
+          fillColor: '#cce6ff',
+          fillOpacity: 0.7,
+        });
+
+        // 폴리곤 지도에 표시
+        polygon.setMap(mapRef.current);
+      });
+      
+      setPolygonCreated(true);  // 폴리곤 생성 상태를 true로 설정
+    } else {
+      console.log(`No polygon data found for zoneNumber: ${zoneNumber}`);
+    }
+  } catch (error) {
+    console.error('Error fetching polygon data:', error);
+  }
+}
+
         if (!mapRef.current) {
           mapRef.current = new window.kakao.maps.Map(container, options);
           geocoderRef.current = new window.kakao.maps.services.Geocoder();
@@ -120,23 +154,25 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
             setClickedCoords(prevCoords => [...prevCoords, { lat, lng }]);
           });
         }
-      }
-    };
+         
+        }
+      };
+      
+    
 
-    // 카카오 지도 API 스크립트 동적으로 추가
     const existingScript = document.querySelector(`script[src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=drawing,services"]`);
     if (!existingScript) {
       const script = document.createElement('script');
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=drawing,services`;
       script.async = true;
       document.head.appendChild(script);
-
+  
       script.onload = () => {
         window.kakao.maps.load(() => {
           createMap();
         });
       };
-
+  
       return () => {
         document.head.removeChild(script);
       };
@@ -145,7 +181,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
         createMap();
       });
     }
-  }, []);
+  }, [zoneNumber]);
 
   const searchAddrFromCoords = (coords, callback) => {
     geocoderRef.current.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
