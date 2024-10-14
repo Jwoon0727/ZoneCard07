@@ -12,6 +12,9 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
   const [clickedCoords, setClickedCoords] = useState([]); // 클릭한 좌표를 저장할 state
   const [polygonCreated, setPolygonCreated] = useState(false); // 폴리곤 생성 여부를 저장할 state
  
+
+  const polygonRefs = useRef([]);  // 폴리곤들을 저장하는 배열
+ 
   useEffect(() => {
     const createMap = async () => {
       if (window.kakao && window.kakao.maps) {
@@ -45,8 +48,18 @@ if (zoneNumber) {
           fillOpacity: 0.7,
         });
 
-        // 폴리곤 지도에 표시
-        polygon.setMap(mapRef.current);
+       // 폴리곤 지도에 표시
+       polygon.setMap(mapRef.current);
+
+       // 폴리곤 배열에 저장
+       polygonRefs.current.push({ polygon, _id: polygonData._id });
+
+       // 폴리곤 클릭 시 해당 폴리곤 삭제 이벤트 추가
+       window.kakao.maps.event.addListener(polygon, 'click', () => {
+         if (window.confirm("폴리곤을 삭제하시겠습니까?")) {
+           removePolygon(polygonData._id, polygon);
+         }
+       });
       });
       
       setPolygonCreated(true);  // 폴리곤 생성 상태를 true로 설정
@@ -182,6 +195,29 @@ if (zoneNumber) {
       });
     }
   }, [zoneNumber]);
+
+    // 서버에 폴리곤 삭제 요청을 보내는 함수
+    const deletePolygonFromDB = async (polygonId) => {
+      try {
+        const response = await fetch(`/api/delete-polygon?_id=${polygonId}`, {
+          method: 'DELETE',
+        });
+  
+        if (!response.ok) {
+          throw new Error('폴리곤 삭제 실패');
+        }
+        console.log('폴리곤 삭제 성공');
+      } catch (error) {
+        console.error('폴리곤 삭제 오류:', error);
+      }
+    };
+
+   // 폴리곤 제거 함수
+  const removePolygon = (polygonId, polygon) => {
+    polygon.setMap(null);  // 지도에서 폴리곤을 제거
+    polygonRefs.current = polygonRefs.current.filter(p => p.polygon !== polygon);  // 배열에서 폴리곤 제거
+    deletePolygonFromDB(polygonId);  // 서버에 폴리곤 삭제 요청 보내기
+  };
 
   const searchAddrFromCoords = (coords, callback) => {
     geocoderRef.current.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
