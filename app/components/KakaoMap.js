@@ -25,9 +25,9 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
         };
     
     // 지도 객체 초기화
-    // if (!mapRef.current) {
-    //   mapRef.current = new window.kakao.maps.Map(container, options);
-    //   console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+    if (!mapRef.current) {
+      mapRef.current = new window.kakao.maps.Map(container, options);
+      console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
 
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
@@ -80,7 +80,7 @@ if (zoneNumber) {
   } catch (error) {
     console.error('Error fetching polygon data:', error);
   }
-// }
+ }
 }
 
         if (!mapRef.current) {
