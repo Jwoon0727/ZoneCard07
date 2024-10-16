@@ -24,7 +24,11 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
           level: 3,
         };
     
-
+    // 지도 객체 초기화
+    if (!mapRef.current) {
+      mapRef.current = new window.kakao.maps.Map(container, options);
+      console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+    
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
   try {
@@ -41,16 +45,23 @@ if (zoneNumber) {
         // 각각의 폴리곤 그리기
         const polygon = new window.kakao.maps.Polygon({
           path: polygonPath,
-          strokeWeight: 3,
-          strokeColor: '#39f',
-          strokeOpacity: 0.8,
-          fillColor: '#cce6ff',
-          fillOpacity: 0.7,
+          strokeWeight: 3,  // 선 두께
+          strokeColor: '#ff0000',  // 선 색상
+          strokeOpacity: 1,  // 선 투명도
+          fillColor: '#ff0000',  // 채우기 색상
+          fillOpacity: 0.5,  // 채우기 투명도
         });
 
        // 폴리곤 지도에 표시
        polygon.setMap(mapRef.current);
+       console.log("mapRef.current:", mapRef.current);
+       console.log("Polygon added to map:", polygon);
+       console.log("Polygon Data:", polygonData);
+console.log("Polygon Path:", polygonPath);
 
+polygonPath.forEach(coord => {
+  console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
+});
        // 폴리곤 배열에 저장
        polygonRefs.current.push({ polygon, _id: polygonData._id });
 
@@ -70,6 +81,7 @@ if (zoneNumber) {
     console.error('Error fetching polygon data:', error);
   }
 }
+    }
 
         if (!mapRef.current) {
           mapRef.current = new window.kakao.maps.Map(container, options);
@@ -173,6 +185,7 @@ if (zoneNumber) {
       
     
 
+    // Kakao Maps API 로드 후 지도 생성
     const existingScript = document.querySelector(`script[src="//dapi.kakao.com/v2/maps/sdk.js?appkey=06f41dcc4cfb97542d10711c83d8457d&autoload=false&libraries=drawing,services"]`);
     if (!existingScript) {
       const script = document.createElement('script');
@@ -285,3 +298,4 @@ if (zoneNumber) {
       };
       
       export default KakaoMap;
+

@@ -11,7 +11,7 @@ export default function Home() {
       {/* <KakaoMap /> */}
 
     <h1>MainPage</h1>
-   <p>123</p>
+   <p>123131323</p>
     </div>
   );
 }
