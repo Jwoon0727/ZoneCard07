@@ -25,10 +25,10 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
         };
     
     // 지도 객체 초기화
-    if (!mapRef.current) {
-      mapRef.current = new window.kakao.maps.Map(container, options);
-      console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
-    
+    // if (!mapRef.current) {
+    //   mapRef.current = new window.kakao.maps.Map(container, options);
+    //   console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
   try {
@@ -45,23 +45,23 @@ if (zoneNumber) {
         // 각각의 폴리곤 그리기
         const polygon = new window.kakao.maps.Polygon({
           path: polygonPath,
-          strokeWeight: 3,  // 선 두께
-          strokeColor: '#ff0000',  // 선 색상
-          strokeOpacity: 1,  // 선 투명도
-          fillColor: '#ff0000',  // 채우기 색상
-          fillOpacity: 0.5,  // 채우기 투명도
+          strokeWeight: 3,
+          strokeColor: '#39f',
+          strokeOpacity: 0.8,
+          fillColor: '#cce6ff',
+          fillOpacity: 0.7,
         });
 
        // 폴리곤 지도에 표시
        polygon.setMap(mapRef.current);
-       console.log("mapRef.current:", mapRef.current);
-       console.log("Polygon added to map:", polygon);
-       console.log("Polygon Data:", polygonData);
-console.log("Polygon Path:", polygonPath);
+//        console.log("mapRef.current:", mapRef.current);
+//        console.log("Polygon added to map:", polygon);
+//        console.log("Polygon Data:", polygonData);
+// console.log("Polygon Path:", polygonPath);
 
-polygonPath.forEach(coord => {
-  console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
-});
+      polygonPath.forEach(coord => {
+          console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
+      });
        // 폴리곤 배열에 저장
        polygonRefs.current.push({ polygon, _id: polygonData._id });
 
@@ -80,8 +80,8 @@ polygonPath.forEach(coord => {
   } catch (error) {
     console.error('Error fetching polygon data:', error);
   }
+// }
 }
-    }
 
         if (!mapRef.current) {
           mapRef.current = new window.kakao.maps.Map(container, options);
@@ -105,20 +105,24 @@ polygonPath.forEach(coord => {
               },
             };
 
-            // DrawingManager 생성
+            // Drawing Manager 생성
             managerRef.current = new window.kakao.maps.Drawing.DrawingManager(drawingOptions);
 
             // Toolbox 생성
             toolboxRef.current = new window.kakao.maps.Drawing.Toolbox({ drawingManager: managerRef.current });
+            
+            // Toolbox 지도에 추가
             mapRef.current.addControl(toolboxRef.current.getElement(), window.kakao.maps.ControlPosition.TOP);
+            console.log("Toolbox added:", toolboxRef.current);
 
-            // 폴리곤이 그려졌을 때 폴리곤 생성 여부를 true로 변경
+            // 폴리곤이 그려진 후 이벤트 리스너 추가
             window.kakao.maps.event.addListener(managerRef.current, 'drawend', (data) => {
               if (data.overlayType === window.kakao.maps.Drawing.OverlayType.POLYGON) {
-                setPolygonCreated(true);  // 폴리곤 생성 상태로 변경
+                setPolygonCreated(true);  // 폴리곤이 그려졌음을 상태로 저장
               }
             });
           }
+        
 
           // 세션 스토리지에서 마커 좌표와 infoWindow 정보를 가져옴
           const savedMarker = JSON.parse(sessionStorage.getItem('markerCoords'));
@@ -135,7 +139,7 @@ polygonPath.forEach(coord => {
               addCloseButtonListener();  // 정보창에 닫기 버튼 리스너 추가
             }
           }
-
+        
           // 지도 클릭 이벤트 추가
           window.kakao.maps.event.addListener(mapRef.current, 'click', function (mouseEvent) {
             if (enableInfoWindow) {  
@@ -207,6 +211,7 @@ polygonPath.forEach(coord => {
         createMap();
       });
     }
+  
   }, [zoneNumber]);
 
     // 서버에 폴리곤 삭제 요청을 보내는 함수
@@ -286,6 +291,7 @@ polygonPath.forEach(coord => {
         <span className="title">지도중심기준 행정동 주소정보</span>
         <span id="centerAddr"></span>
       </div>
+      
       {polygonCreated && (
                <button 
                onClick={saveCoords} 
@@ -298,4 +304,5 @@ polygonPath.forEach(coord => {
       };
       
       export default KakaoMap;
+
 
