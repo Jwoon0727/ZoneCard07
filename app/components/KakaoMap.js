@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNumber }) => {  
+const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNumber, initializeMap = true }) => {  
   const mapRef = useRef(null);  // 지도 객체 참조
   const geocoderRef = useRef(null);  // 지오코더 객체 참조
   const markerRef = useRef(null);  // 마커 객체 참조
@@ -25,9 +25,11 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
         };
     
     // 지도 객체 초기화
-    if (!mapRef.current) {
+    // initializeMap props가 true일 때만 지도 객체 초기화
+    if (initializeMap && !mapRef.current) {
       mapRef.current = new window.kakao.maps.Map(container, options);
       console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+    }
 
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
@@ -53,11 +55,7 @@ if (zoneNumber) {
         });
 
        // 폴리곤 지도에 표시
-       polygon.setMap(mapRef.current);
-//        console.log("mapRef.current:", mapRef.current);
-//        console.log("Polygon added to map:", polygon);
-//        console.log("Polygon Data:", polygonData);
-// console.log("Polygon Path:", polygonPath);
+       polygon.setMap(mapRef.current)
 
       polygonPath.forEach(coord => {
           console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
@@ -80,7 +78,7 @@ if (zoneNumber) {
   } catch (error) {
     console.error('Error fetching polygon data:', error);
   }
- }
+ 
 }
 
         if (!mapRef.current) {
