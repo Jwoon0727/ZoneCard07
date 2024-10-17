@@ -52,9 +52,9 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
                // 폴리곤 지도에 표시
                polygon.setMap(mapRef.current)
         
-              polygonPath.forEach(coord => {
-                  console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
-              });
+              // polygonPath.forEach(coord => {
+              //     console.log("Lat:", coord.getLat(), "Lng:", coord.getLng());
+              // });
                // 폴리곤 배열에 저장
                polygonRefs.current.push({ polygon, _id: polygonData._id });
         
@@ -88,7 +88,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
               removable: true,
             },
             polygonOptions: {
-              draggable: true,
+              draggable: false,
               removable: true,
               editable: true,
               strokeColor: '#39f',
@@ -97,6 +97,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
             },
           };
 
+          
           // Drawing Manager 생성
           managerRef.current = new window.kakao.maps.Drawing.DrawingManager(drawingOptions);
 
@@ -106,6 +107,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
           // Toolbox 지도에 추가
           mapRef.current.addControl(toolbox.getElement(), window.kakao.maps.ControlPosition.TOPRIGHT);
 
+          toolbox.getElement().style.display = 'none'; // Toolbox 전체를 숨기고 싶을 때 사용
           // Drawing 완료 후 발생하는 이벤트 리스너 추가
 
           window.kakao.maps.event.addListener(managerRef.current, 'drawend', (data) => {
@@ -188,6 +190,38 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
   
   }, [initializeMap, enableDrawingTools, enableInfoWindow, zoneNumber]);
 
+  // 서버에 폴리곤 삭제 요청을 보내는 함수
+const deletePolygonFromDB = async (polygonId) => {
+  try {
+    const response = await fetch(`/api/delete-polygon?_id=${polygonId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('폴리곤 삭제 실패');
+    }
+    console.log('폴리곤 삭제 성공');
+  } catch (error) {
+    console.error('폴리곤 삭제 오류:', error);
+  }
+};
+
+// 폴리곤 제거 함수
+// 폴리곤 제거 함수
+const removePolygon = (polygonId, polygon) => {
+  // 폴리곤을 지도에서 즉시 제거
+  polygon.setMap(null);  // 지도에서 폴리곤을 제거
+  polygonRefs.current = polygonRefs.current.filter(p => p.polygon !== polygon);  // 배열에서 폴리곤 제거
+
+  // 서버에 폴리곤 삭제 요청을 비동기적으로 처리
+  deletePolygonFromDB(polygonId).then(() => {
+    // 서버 요청이 성공한 후 페이지 새로고침
+    window.location.reload();  // 페이지 새로고침
+  }).catch(error => {
+    console.error('서버 요청 오류:', error);
+    alert('폴리곤 삭제 중 문제가 발생했습니다. 새로고침 후 다시 시도해 주세요.');
+  });
+};
   const searchDetailAddrFromCoords = (coords, callback) => {
     const geocoder = new window.kakao.maps.services.Geocoder();
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
@@ -208,6 +242,11 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
     if (managerRef.current) {
       managerRef.current.cancel(); // 현재 그리기 중이면 취소
       managerRef.current.select(window.kakao.maps.Drawing.OverlayType[type]); // 선택한 도형 타입으로 그리기 시작
+  
+      // 폴리곤을 선택할 때마다 클릭한 좌표 초기화
+      if (type === 'POLYGON') {
+        setClickedCoords([]); // 좌표 배열 초기화
+      }
     }
   };
 
@@ -237,6 +276,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
     }
   };
 
+  
   return (
     <div style={{ width: '100%', height: '50vh', position: 'relative' }}>
       <div id="map" style={{ width: '100%', height: '100%', backgroundColor: 'lightgray' }}></div>
@@ -246,7 +286,7 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, initial
         {polygonCreated && (
           <button 
             onClick={saveCoords} 
-            style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: 2, padding: '10px', backgroundColor: '#39f', color: '#fff' }}>
+            style={{ position: 'absolute', bottom: '-400px', right: '20px', zIndex: 2, padding: '10px', backgroundColor: '#39f', color: '#fff' }}>
             좌표 저장하기
           </button>
         )}
