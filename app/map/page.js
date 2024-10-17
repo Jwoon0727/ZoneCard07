@@ -8,7 +8,7 @@ export default function map() {
   return (
     <div>
       <ClientNavbar />
-    <KakaoMap initializeMap = {false} />
+    <KakaoMap />
 
   
    
