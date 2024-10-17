@@ -31,6 +31,14 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
     //   console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
     // }
 
+    if (!mapRef.current) {
+      mapRef.current = new window.kakao.maps.Map(container, options);
+      console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+    } else {
+      console.log("Map already exists, skipping initialization.");
+    }
+
+    
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
   try {
