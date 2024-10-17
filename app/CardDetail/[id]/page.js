@@ -122,7 +122,7 @@ export default function Detail(props) {
               구역번호: {zoneNumber}
             </h2>
           </div>
-            <KakaoMap  enableDrawingTools = {true} enableInfoWindow = {false} zoneNumber={zoneNumber} initializeMap = {true}/>
+            <KakaoMap  enableDrawingTools = {true} enableInfoWindow = {true} zoneNumber={zoneNumber} initializeMap = {true}/>
           <h4></h4>
           <div style={{ 
             display: 'flex', 
