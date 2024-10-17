@@ -151,6 +151,7 @@ export default function Detail(props) {
                   {cardGroup.map((card) => (
                     <div key={card._id}>
                       <Card.Title>{card.세부정보 || '정보 없음'}</Card.Title>
+                     
                       {editCardId === card._id ? (
                         <>
                           <input 

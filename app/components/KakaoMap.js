@@ -26,10 +26,10 @@ const KakaoMap = ({ enableDrawingTools = false, enableInfoWindow = true, zoneNum
     
     // 지도 객체 초기화
     // initializeMap props가 true일 때만 지도 객체 초기화
-    if (initializeMap && !mapRef.current) {
-      mapRef.current = new window.kakao.maps.Map(container, options);
-      console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
-    }
+    // if (initializeMap && !mapRef.current) {
+    //   mapRef.current = new window.kakao.maps.Map(container, options);
+    //   console.log("Map initialized:", mapRef.current);  // 지도 초기화 로그
+    // }
 
 // zoneNumber가 있을 때 폴리곤을 그리기 위한 API 호출
 if (zoneNumber) {
@@ -288,8 +288,10 @@ if (zoneNumber) {
       <div className="hAddr" style={{ position: 'absolute', left: '10px', top: '10px', borderRadius: '2px', background: 'rgba(255,255,255,0.8)', zIndex: 1, padding: '5px' }}>
         <span className="title">지도중심기준 행정동 주소정보</span>
         <span id="centerAddr"></span>
-      </div>
-      
+      </div> 
+
+    
+
       {polygonCreated && (
                <button 
                onClick={saveCoords} 
